@@ -7,7 +7,7 @@
   <style>
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       background: linear-gradient(135deg, #ff758c, #ff7eb3);
       display: flex;
       align-items: center;
@@ -15,75 +15,111 @@
       font-family: 'Poppins', sans-serif;
       color: white;
       overflow: hidden;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .wrapper {
+      text-align: center;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .title {
+      font-size: 26px;
+      margin-bottom: 15px;
+      font-weight: 600;
     }
 
     .container {
-      text-align: center;
       background: rgba(0, 0, 0, 0.25);
-      padding: 40px 50px;
+      padding: 30px 25px;
       border-radius: 20px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      width: 420px;
-      max-width: 90%;
-      z-index: 1;
     }
 
     h1 {
-      font-size: 30px;
-      margin-bottom: 30px;
+      font-size: 22px;
+      margin-bottom: 25px;
+      line-height: 1.4;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      position: relative;
     }
 
     button {
-      font-size: 20px;
-      padding: 12px 30px;
+      font-size: 18px;
+      padding: 12px 28px;
       border: none;
       border-radius: 30px;
       cursor: pointer;
       transition: 0.3s;
+      touch-action: manipulation;
     }
 
     #yesBtn {
       background: #00e676;
       color: #003b1f;
-      margin-right: 15px;
     }
 
     #yesBtn:hover {
       transform: scale(1.1);
     }
 
+    /* زر NO شكله مظبوط */
     #noBtn {
       background: #ff1744;
       color: white;
-      position: fixed; /* 👈 أهم سطر */
-      left: 55%;
-      top: 55%;
-      z-index: 2;
+    }
+
+    /* لما يبدأ الهروب */
+    #noBtn.escape {
+      position: fixed;
+      z-index: 10;
     }
 
     .love-message {
       display: none;
-      font-size: 26px;
+      font-size: 20px;
       line-height: 1.6;
       animation: fadeIn 1.2s ease-in-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.8); }
+      from { opacity: 0; transform: scale(0.85); }
       to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 480px) {
+      .title { font-size: 22px; }
+      h1 { font-size: 20px; }
+      button {
+        font-size: 16px;
+        padding: 10px 22px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="container" id="main">
-    <h1>Would you like to spend your birthday with me? 🎂💖</h1>
-    <button id="yesBtn">Yes 💕</button>
+  <div class="wrapper">
+    <div class="title">For Yasmin 💕</div>
+
+    <div class="container" id="main">
+      <h1>Would you like to spend your birthday with me? 🎂💖</h1>
+
+      <div class="buttons">
+        <button id="yesBtn">Yes 💕</button>
+        <button id="noBtn">No 🙄</button>
+      </div>
+    </div>
   </div>
 
-  <button id="noBtn">No 🙄</button>
-
-  <div class="container love-message" id="love">
+  <div class="wrapper love-message" id="love">
     💖💖💖 <br><br>
     You just made me the happiest person ever 🥹❤️ <br>
     I promise to make your birthday full of smiles, laughs,  
@@ -97,7 +133,9 @@
     const main = document.getElementById("main");
     const love = document.getElementById("love");
 
-    noBtn.addEventListener("mouseenter", () => {
+    function moveNoButton() {
+      noBtn.classList.add("escape");
+
       const maxX = window.innerWidth - noBtn.offsetWidth;
       const maxY = window.innerHeight - noBtn.offsetHeight;
 
@@ -106,6 +144,15 @@
 
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
+    }
+
+    // Desktop
+    noBtn.addEventListener("mouseenter", moveNoButton);
+
+    // Mobile
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      moveNoButton();
     });
 
     yesBtn.addEventListener("click", () => {
